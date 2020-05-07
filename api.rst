@@ -1,5 +1,6 @@
 胤元数据导入方案：
 
+//13.0
 配置：
 final String url = <insert server URL>,
               db = <insert database name>,
@@ -23,6 +24,7 @@ final XmlRpcClient models = new XmlRpcClient() {{
     }});
 }};
 
+//13.0
 远程调用：
 models.execute("execute_kw", asList(
     db, uid, password,
@@ -31,6 +33,7 @@ models.execute("execute_kw", asList(
     new HashMap() {{ put("raise_exception", false); }}
 ));
 
+//13.0
 生成产品：
 final Integer id = (Integer)models.execute("execute_kw", asList(
     db, uid, password,
@@ -55,6 +58,7 @@ final Integer id = (Integer)models.execute("execute_kw", asList(
         }})
 ));
 
+//13.0
 生成客户和供应商：
 final Integer id = (Integer)models.execute("execute_kw", asList(
     db, uid, password,
@@ -65,8 +69,8 @@ final Integer id = (Integer)models.execute("execute_kw", asList(
         put("picking_warn", "no-message"(注释：调拨警告，非必填，可选项有["no-message", "warning", "block"]，数据库varchar类型));
         put("purchase_warn", "no-message"(注释：采购警告，非必填，可选项有["no-message", "warning", "block"]，数据库varchar类型));
         put("sale_warn", "no-message"(注释：销售警告，非必填，可选项有["no-message", "warning", "block"]，数据库varchar类型));
-        put("customer", True(注释：该联系人是客户，非必填，数据库boolean类型));
-        put("supplier", True(注释：该联系人是供应商，非必填，数据库boolean类型));
+        put("customer_rank", 1(注释：该联系人是客户时填入一个大于0的整形数，非必填，数据库integer类型));
+        put("supplier_rank", 1(注释：该联系人是供应商时填入一个大于0的整形数，非必填，数据库integer类型));
         put("lang", "en_US"(注释：语言，非必填，数据库varchar类型));
         put("tz", "Asia/Shanghai"(注释：时区，非必填，数据库varchar类型));
         put("type", "contact"(注释：联系人类型，非必填，可选项有["contact", "invoice", "delivery"，"other", "private"]，数据库varchar类型));
@@ -76,6 +80,7 @@ final Integer id = (Integer)models.execute("execute_kw", asList(
         }})
 ));
 
+//13.0
 生成采购订单：
 final Integer id = (Integer)models.execute("execute_kw", asList(
     db, uid, password,
@@ -91,6 +96,7 @@ final Integer id = (Integer)models.execute("execute_kw", asList(
         }})
 ));
 
+//13.0
 生成采购订单明细：
 final Integer id = (Integer)models.execute("execute_kw", asList(
     db, uid, password,
@@ -106,6 +112,7 @@ final Integer id = (Integer)models.execute("execute_kw", asList(
         }})
 ));
 
+//13.0
 生成销售订单：
 final Integer id = (Integer)models.execute("execute_kw", asList(
     db, uid, password,
@@ -127,6 +134,7 @@ final Integer id = (Integer)models.execute("execute_kw", asList(
         }})
 ));
 
+//13.0
 生成销售订单明细：
 final Integer id = (Integer)models.execute("execute_kw", asList(
     db, uid, password,
@@ -303,6 +311,7 @@ models.execute_kw(db, uid, password, 'hr.expense.sheet', 'action_reconcile_payme
 4.查询调拨信息，确认调拨状态
 4.确认所有调拨（包括已修改和不需要修改的调拨），完成整个流程
 
+//13.0
 确认采购订单并生成调拨：
 asList((Object[])models.execute("execute_kw", asList(
     db, uid, password,
@@ -310,6 +319,7 @@ asList((Object[])models.execute("execute_kw", asList(
     asList(ids(注释：采购订单，必填，外键，来源表"purchase.order"，数据库integer类型，可以输入多个，需转为列表后传入))
 ));
 
+//13.0
 根据单据日期查询仓库stock.move信息：
 asList((Object[])models.execute("execute_kw", asList(
     db, uid, password,
@@ -379,7 +389,7 @@ models.execute("execute_kw", asList(
 
 asList((Object[])models.execute("execute_kw", asList(
     db, uid, password,
-    "sale.order", "multi_confirm",
+    "sale.order", "action_confirm",
     asList(ids(注释：销售订单，必填，外键，来源表"sale.order"，数据库integer类型，可以输入多个，需转为列表后传入))
 ));
 
@@ -481,6 +491,7 @@ final Integer id = (Integer)models.execute("execute_kw", asList(
         }})
 ));
 
+//13.0
 生成库存期初：
 final Integer id = (Integer)models.execute("execute_kw", asList(
     db, uid, password,
@@ -489,12 +500,12 @@ final Integer id = (Integer)models.execute("execute_kw", asList(
         put("name", "New"(注释：名称，必填，数据库varchar类型));
 	put("company_id", 1(注释：所属公司，必填，外键，来源表"res.company"，数据库integer类型));
 	put("date", "2018-12-17 08:30:48"(注释：盘点时间，必填，数据库timestamp without time zone类型);
-	put("filter", "partial"(注释：盘点类型，必填，可选项有["none", "category", "product", "partial"]，数据库varchar类型));
-        put("location_id", 5(盘点位置，必填，外键，来源表"stock.location"，数据库integer类型);
+        put("location_ids", [ 6, 0, [ 5 ] ](盘点位置，必填，外键，来源表"stock.location"，数据库integer类型);
 	put("state", "confirm"(注释：盘点状态，必填，可选项有["draft", "cancel", "confirm", "done"]，数据库varchar类型));
 	}})
 ));
 
+//13.0
 生成库存期初明细：
 final Integer id = (Integer)models.execute("execute_kw", asList(
     db, uid, password,
@@ -511,6 +522,7 @@ final Integer id = (Integer)models.execute("execute_kw", asList(
 确认库存期初：
 models.execute_kw(db, uid, password, 'stock.inventory', 'action_remote_validate', [[id]](注释：库存期初，必填，外键，来源表"stock.inventory"，数据库integer类型))
 
+//13.0
 修改产品成本：
 models.execute("execute_kw", asList(
     db, uid, password,
